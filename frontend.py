@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
+from time import strftime
+from tkcalendar import DateEntry
 
 
 class MainWindow:
@@ -12,6 +14,8 @@ class MainWindow:
         self.y = ((self.sc_height / 2) - 260) - (self.sc_height / 4)
         self.window.geometry(('%dx%d+%d+%d' % (690, 280, self.x, self.y)))
         self.window.title("Lukas Rausa - TO-DO LIST")
+
+        self.date = strftime('%d-%B-%Y')  # use in new task window
 
         self.header = tk.Frame(self.window, width=600, height=300, bg="gray8")
         self.header.grid(row=0, column=0, sticky="WE")
@@ -44,6 +48,9 @@ class MainWindow:
         self.progress.grid(row=1, column=2, padx=1, sticky="WE")
         self.confirmation = tk.Button(self.columns_frame, width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
         self.confirmation.grid(row=1, column=3, padx=1, sticky="WE")
+
+    def open_new_task(self):
+        pass
 
     def unpack_tasks(self):
         pass
