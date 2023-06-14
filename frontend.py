@@ -3,6 +3,11 @@ from tkinter import ttk
 from time import strftime
 from tkcalendar import DateEntry
 
+from datetime import datetime
+
+import db
+import backend as be
+
 
 class MainWindow:
     def __init__(self):
@@ -38,21 +43,52 @@ class MainWindow:
                                       bg="gray24")
         self.confirmations.grid(row=0, column=3, padx=1, sticky="W")
 
-        #self.tasks_list = tk.Frame(self.window, width=640, height=250, bg="gray8")
-        #self.tasks_list.grid(row=2, column=0, sticky="W")
-
         self.task = tk.Label(self.columns_frame, width=37, text="Pošli email do Gewisu teraz hned", font=("Source Code Pro", 8), fg="white",
                              bg="gray44")
         self.task.grid(row=1, column=0, padx=1, sticky="WE")
         self.deadline = tk.Label(self.columns_frame, width=14, text="2.6.2023", font=("Source Code Pro", 8), fg="white", bg="gray44")
         self.deadline.grid(row=1, column=1, padx=1, sticky="WE", ipadx=1)
-        self.progress = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150)
+        self.progress = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=4)
         self.progress.grid(row=1, column=2, padx=1, sticky="WE")
         self.confirmation = tk.Button(self.columns_frame, width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
         self.confirmation.grid(row=1, column=3, padx=1, sticky="WE")
 
+        # Variables
+        # TopLevel
+        self.nt_window = None
+        self.top_task = None
+        self.top_deadline = None
+        self.top_task_entry = None
+        self.top_deadline_entry = None
+        self.accept_new_task = None
+        # Task datas
+        self.task_info = None
+        self.deadline = None
+        self.progress = None
+        self.remained = None
+
     def open_new_task(self):
-        self.progress.step(1)
+        self.nt_window = tk.Toplevel()
+        self.nt_window.geometry("400x80")
+        self.nt_window.protocol("WM_DELETE_WINDOW", self.save_new_task)
+        self.top_task = tk.Label(self.nt_window, width=14, text="Task text", font=("Source Code Pro", 11), fg="white", bg="gray44")
+        self.top_task.grid(row=0, column=0, sticky="WE")
+        self.top_deadline = tk.Label(self.nt_window, width=14, text="Deadline", font=("Source Code Pro", 11), fg="white", bg="gray44")
+        self.top_deadline.grid(row=0, column=1, columnspan=2, sticky="WE")
+        self.top_task_entry = tk.Entry(self.nt_window, width=47)
+        self.top_task_entry.grid(row=1, column=0, padx=1, sticky="NS")
+        self.top_deadline_entry = DateEntry(self.nt_window, date_pattern='yyyy/mm/dd')
+        self.top_deadline_entry.grid(row=1, column=1, sticky="WE")
+        self.accept_new_task = tk.Button(self.nt_window, text="ACCEPT", command=self.save_new_task, font=("Source Code Pro", 8), fg="white", bg="gray44")
+        self.accept_new_task.grid(row=2, column=0, columnspan=2, sticky="WE")
+
+    def save_new_task(self):
+        self.task_info = self.top_task_entry.get()
+        self.deadline = self.top_deadline_entry.get()
+        #print("DEADLINE type is: ", type(self.deadline))
+        self.progress = int(be.refresh_progress(self.deadline))
+        self.remained = self.progress
+        db.add_new_task(self.task_info, self.deadline, self.progress, self.remained)
 
     def unpack_tasks(self):
         pass
