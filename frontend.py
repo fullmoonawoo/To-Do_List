@@ -21,7 +21,8 @@ class MainWindow:
         self.header.grid(row=0, column=0, sticky="WE")
         self.title = tk.Label(self.header, text=">> TO-DO LIST >>", font=("Source Code Pro", 12, "bold"), fg="green2", bg="gray8", anchor="w")
         self.title.grid(row=0, column=0, ipadx=224)
-        self.add_task = tk.Button(self.header, width=4, text="+", font=("Source Code Pro", 12, "bold"), fg="green2", bg="gray40")
+        self.add_task = tk.Button(self.header, width=4, text="+", command=self.open_new_task, font=("Source Code Pro", 12, "bold"), fg="green2",
+                                  bg="gray40")
         self.add_task.grid(row=0, column=1)
 
         self.columns_frame = tk.Frame(self.window, width=620, height=280, bg="gray8")
@@ -33,7 +34,8 @@ class MainWindow:
         self.deadlines.grid(row=0, column=1, padx=1, sticky="W")
         self.progresses = tk.Label(self.columns_frame, width=16, text="Progress", font=("Source Code Pro", 11, "bold"), fg="green2", bg="gray24")
         self.progresses.grid(row=0, column=2, padx=1, sticky="W")
-        self.confirmations = tk.Label(self.columns_frame, width=11, text="Confirm", font=("Source Code Pro", 11, "bold"), fg="green2", bg="gray24")
+        self.confirmations = tk.Label(self.columns_frame, width=11, text="Confirm", font=("Source Code Pro", 11, "bold"), fg="green2",
+                                      bg="gray24")
         self.confirmations.grid(row=0, column=3, padx=1, sticky="W")
 
         #self.tasks_list = tk.Frame(self.window, width=640, height=250, bg="gray8")
@@ -44,13 +46,13 @@ class MainWindow:
         self.task.grid(row=1, column=0, padx=1, sticky="WE")
         self.deadline = tk.Label(self.columns_frame, width=14, text="2.6.2023", font=("Source Code Pro", 8), fg="white", bg="gray44")
         self.deadline.grid(row=1, column=1, padx=1, sticky="WE", ipadx=1)
-        self.progress = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="indeterminate", length=150)
+        self.progress = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150)
         self.progress.grid(row=1, column=2, padx=1, sticky="WE")
         self.confirmation = tk.Button(self.columns_frame, width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
         self.confirmation.grid(row=1, column=3, padx=1, sticky="WE")
 
     def open_new_task(self):
-        pass
+        self.progress.step(1)
 
     def unpack_tasks(self):
         pass
