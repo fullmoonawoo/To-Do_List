@@ -43,17 +43,7 @@ class MainWindow:
                                       bg="gray24")
         self.confirmations.grid(row=0, column=3, padx=1, sticky="W")
 
-        self.task = tk.Label(self.columns_frame, width=37, text="Pošli email do Gewisu teraz hned", font=("Source Code Pro", 8), fg="white",
-                             bg="gray44")
-        self.task.grid(row=1, column=0, padx=1, sticky="WE")
-        self.deadline = tk.Label(self.columns_frame, width=14, text="2.6.2023", font=("Source Code Pro", 8), fg="white", bg="gray44")
-        self.deadline.grid(row=1, column=1, padx=1, sticky="WE", ipadx=1)
-        self.progress = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=4)
-        self.progress.grid(row=1, column=2, padx=1, sticky="WE")
-        self.confirmation = tk.Button(self.columns_frame, width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
-        self.confirmation.grid(row=1, column=3, padx=1, sticky="WE")
-
-        # Variables
+        # Default variables
         # TopLevel
         self.nt_window = None
         self.top_task = None
@@ -66,6 +56,14 @@ class MainWindow:
         self.deadline = None
         self.progress = None
         self.remained = None
+        self.db_content = None
+        self.row_move = 1
+        self.task_container = []
+        # Task widgets
+        self.task_widget = None
+        self.deadline_widget = None
+        self.progress_widget = None
+        self.confirmation_widget = None
 
     def open_new_task(self):
         self.nt_window = tk.Toplevel()
@@ -85,15 +83,27 @@ class MainWindow:
     def save_new_task(self):
         self.task_info = self.top_task_entry.get()
         self.deadline = self.top_deadline_entry.get()
-        #print("DEADLINE type is: ", type(self.deadline))
         self.progress = int(be.refresh_progress(self.deadline))
         self.remained = self.progress
         db.add_new_task(self.task_info, self.deadline, self.progress, self.remained)
 
     def unpack_tasks(self):
-        pass
+        self.db_content = db.get_tasks()
+        for record in self.db_content:
+            self.task_widget = tk.Label(self.columns_frame, width=37, text=record.task, font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.task_widget.grid(row=self.row_move, column=0, padx=1, sticky="WE")
+            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.deadline_widget.grid(row=self.row_move, column=1, padx=1, sticky="WE", ipadx=1)
+            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=4)
+            self.progress_widget.grid(row=self.row_move, column=2, padx=1, sticky="WE")
+            self.confirmation_widget = tk.Button(self.columns_frame, width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
+            self.task_container.append([self.task_widget, self.deadline_widget, self.progress_widget, self.confirmation_widget])
+            self.row_move += 1
 
     def run(self):
+        self.unpack_tasks()
+        print(self.task_container)
         self.window.mainloop()
 
 

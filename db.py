@@ -46,15 +46,16 @@ def add_new_task(task_info, deadline, progress, remained):
 
 def get_tasks():
     db_values = session.query(Tasks).all()
-    print(db_values)
     return db_values
 
 
 def remove_task():
-    pass
+    session.delete()  # there needs to be something for identifing row in db
+    session.commit()
+    session.close()
 
 
 result = get_tasks()
 
 for x in result:
-    print(x)
+    print(x.task, x.deadline, x.progress, x.remained)
