@@ -96,6 +96,7 @@ class MainWindow:
         self.progress = int(be.refresh_progress(self.deadline))
         self.remained = self.progress
         db.add_new_task(self.task_info, self.deadline, self.progress, self.remained)
+        # Refreshing workspace
         self.unpack_tasks()
         self.nt_window.destroy()
 
