@@ -51,15 +51,14 @@ def get_tasks():
 
 def remove_task(id_numb):
     db_val = session.query(Tasks).all()
-    for row in db_val:
-        if row.id == id_numb:
-            session.delete(row)
-            session.commit()
-            session.close()
+    try:
+        to_remove = next(row for row in db_val if row.id == id_numb)
+        session.delete(to_remove)
+        session.commit()
+        session.close()
+    except StopIteration:
+        print("No such the record in database !")
 
-
-
-#remove_task(1)
 
 #result = get_tasks()
 

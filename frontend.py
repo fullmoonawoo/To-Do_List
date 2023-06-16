@@ -46,6 +46,10 @@ class MainWindow:
         # Default variables
         # TopLevel
         self.nt_window = None
+        self.sctop_width = None
+        self.sctop_height = None
+        self.top_x = None
+        self.top_y = None
         self.top_task = None
         self.top_deadline = None
         self.top_task_entry = None
@@ -67,9 +71,13 @@ class MainWindow:
 
     def open_new_task(self):
         self.nt_window = tk.Toplevel()
-        self.nt_window.geometry("400x80")
         self.nt_window.title("Add new task")
         self.nt_window.resizable(width=False, height=False)
+        self.sctop_width = self.nt_window.winfo_screenwidth()
+        self.sctop_height = self.nt_window.winfo_screenheight()
+        self.top_x = ((self.sctop_width / 2) - 310) + (self.sctop_width / 4)
+        self.top_y = ((self.sctop_height / 2) - 580) + (self.sctop_height / 4)
+        self.nt_window.geometry(('%dx%d+%d+%d' % (400, 80, self.top_x, self.top_y)))
         #self.nt_window.protocol("WM_DELETE_WINDOW", self.save_new_task)
         self.top_task = tk.Label(self.nt_window, width=20, text="Task text", font=("Source Code Pro", 11), fg="white", bg="gray44")
         self.top_task.grid(row=0, column=0, sticky="WE")
@@ -103,9 +111,11 @@ class MainWindow:
             self.task_container.append([self.task_widget, self.deadline_widget, self.progress_widget, self.confirmation_widget])
             self.row_move += 1
 
+    def confirm_task(self):
+        pass
+
     def run(self):
         self.unpack_tasks()
-        #print(self.task_container)
         self.window.mainloop()
 
 
