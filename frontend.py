@@ -68,17 +68,19 @@ class MainWindow:
     def open_new_task(self):
         self.nt_window = tk.Toplevel()
         self.nt_window.geometry("400x80")
-        self.nt_window.protocol("WM_DELETE_WINDOW", self.save_new_task)
-        self.top_task = tk.Label(self.nt_window, width=14, text="Task text", font=("Source Code Pro", 11), fg="white", bg="gray44")
+        self.nt_window.title("Add new task")
+        self.nt_window.resizable(width=False, height=False)
+        #self.nt_window.protocol("WM_DELETE_WINDOW", self.save_new_task)
+        self.top_task = tk.Label(self.nt_window, width=20, text="Task text", font=("Source Code Pro", 11), fg="white", bg="gray44")
         self.top_task.grid(row=0, column=0, sticky="WE")
-        self.top_deadline = tk.Label(self.nt_window, width=14, text="Deadline", font=("Source Code Pro", 11), fg="white", bg="gray44")
+        self.top_deadline = tk.Label(self.nt_window, width=10, text="Deadline", font=("Source Code Pro", 11), fg="white", bg="gray20")
         self.top_deadline.grid(row=0, column=1, columnspan=2, sticky="WE")
-        self.top_task_entry = tk.Entry(self.nt_window, width=47)
+        self.top_task_entry = tk.Entry(self.nt_window, width=50)
         self.top_task_entry.grid(row=1, column=0, padx=1, sticky="NS")
         self.top_deadline_entry = DateEntry(self.nt_window, date_pattern='yyyy/mm/dd')
         self.top_deadline_entry.grid(row=1, column=1, sticky="WE")
         self.accept_new_task = tk.Button(self.nt_window, text="ACCEPT", command=self.save_new_task, font=("Source Code Pro", 8), fg="white", bg="gray44")
-        self.accept_new_task.grid(row=2, column=0, columnspan=2, sticky="WE")
+        self.accept_new_task.grid(row=2, column=0, columnspan=2, sticky="WE", ipadx=20)
 
     def save_new_task(self):
         self.task_info = self.top_task_entry.get()
@@ -103,7 +105,7 @@ class MainWindow:
 
     def run(self):
         self.unpack_tasks()
-        print(self.task_container)
+        #print(self.task_container)
         self.window.mainloop()
 
 

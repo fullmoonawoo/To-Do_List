@@ -50,9 +50,13 @@ def get_tasks():
 
 
 def remove_task():
-    session.delete()  # there needs to be something for identifing row in db
-    session.commit()
-    session.close()
+    db_val = session.query(Tasks).all()
+    print(db_val)
+    for row in db_val:
+        session.delete(row)
+        session.commit()
+        session.close()
+    print(db_val)
 
 
 result = get_tasks()
