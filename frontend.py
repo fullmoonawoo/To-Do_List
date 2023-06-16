@@ -96,8 +96,11 @@ class MainWindow:
         self.progress = int(be.refresh_progress(self.deadline))
         self.remained = self.progress
         db.add_new_task(self.task_info, self.deadline, self.progress, self.remained)
+        self.unpack_tasks()
+        self.nt_window.destroy()
 
     def unpack_tasks(self):
+        self.refresh_workspace()
         self.db_content = db.get_tasks()
         for record in self.db_content:
             self.task_widget = tk.Label(self.columns_frame, width=37, text=record.task, font=("Source Code Pro", 8), fg="white", bg="gray44")
@@ -110,6 +113,12 @@ class MainWindow:
             self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
             self.task_container.append([self.task_widget, self.deadline_widget, self.progress_widget, self.confirmation_widget])
             self.row_move += 1
+
+    def refresh_workspace(self):
+        if len(self.task_container) != 0:
+            for widget_dump in self.task_container:
+                for widget in widget_dump:
+                    widget.destroy()
 
     def confirm_task(self):
         pass
