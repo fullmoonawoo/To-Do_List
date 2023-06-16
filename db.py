@@ -49,17 +49,19 @@ def get_tasks():
     return db_values
 
 
-def remove_task():
+def remove_task(id_numb):
     db_val = session.query(Tasks).all()
-    print(db_val)
     for row in db_val:
-        session.delete(row)
-        session.commit()
-        session.close()
-    print(db_val)
+        if row.id == id_numb:
+            session.delete(row)
+            session.commit()
+            session.close()
 
 
-result = get_tasks()
 
-for x in result:
-    print(x.task, x.deadline, x.progress, x.remained)
+#remove_task(1)
+
+#result = get_tasks()
+
+#for x in result:
+    #print(x.id, x.task, x.deadline, x.progress, x.remained, "RECORD")
