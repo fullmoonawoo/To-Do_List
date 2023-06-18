@@ -59,7 +59,7 @@ class MainWindow:
         # Task datas
         self.task_info = None
         self.deadline = None
-        self.progress = None
+        self.period = None
         self.remained = None
         self.db_content = None
         self.row_move = 1
@@ -94,9 +94,9 @@ class MainWindow:
     def save_new_task(self):
         self.task_info = self.top_task_entry.get()
         self.deadline = self.top_deadline_entry.get()
-        self.progress = int(be.refresh_progress(self.deadline))
-        self.remained = self.progress
-        db.add_new_task(self.task_info, self.deadline, self.progress, self.remained)
+        self.period = int(be.refresh_progress(self.deadline))
+        self.remained = self.period
+        db.add_new_task(self.task_info, self.deadline, self.period, self.remained)
         # Refreshing workspace
         self.unpack_tasks()
         self.nt_window.destroy()
@@ -109,7 +109,7 @@ class MainWindow:
             self.task_widget.grid(row=self.row_move, column=0, padx=1, sticky="WE")
             self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.deadline_widget.grid(row=self.row_move, column=1, padx=1, sticky="WE", ipadx=1)
-            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=4)
+            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=record.period)
             self.progress_widget.grid(row=self.row_move, column=2, padx=1, sticky="WE")
             self.confirmation_widget = tk.Button(self.columns_frame, command=partial(self.confirm_task, record.id), width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
@@ -126,8 +126,13 @@ class MainWindow:
         db.remove_task(task_id)
         self.unpack_tasks()
 
+    def refresh_progress(self):
+        for widget_dump in self.task_container:
+            widget_dump[2]['value'] = 40
+
     def run(self):
         self.unpack_tasks()
+        self.refresh_progress()
         self.window.mainloop()
 
 

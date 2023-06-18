@@ -23,11 +23,11 @@ class Tasks(Base):
     id = Column(Integer, primary_key=True)
     task = Column(String)
     deadline = Column(String)
-    progress = Column(Integer)
+    period = Column(Integer)
     remained = Column(Integer)
 
     def __str__(self):
-        return f'ID: {self.id}, TASK: {self.task}, DEADLINE: {self.deadline}, PROGRESS: {self.progress}, REMAINED: {self.remained}'
+        return f'ID: {self.id}, TASK: {self.task}, DEADLINE: {self.deadline}, PERIOD: {self.period}, REMAINED: {self.remained}'
 
 
 # Create the tables
@@ -37,8 +37,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 
-def add_new_task(task_info, deadline, progress, remained):
-    task = Tasks(task=task_info, deadline=deadline, progress=progress, remained=remained)  # here will be output from backend
+def add_new_task(task_info, deadline, period, remained):
+    task = Tasks(task=task_info, deadline=deadline, period=period, remained=remained)  # here will be output from backend
     session.add(task)
     session.commit()
     session.close()
@@ -63,4 +63,4 @@ def remove_task(id_numb):
 #result = get_tasks()
 
 #for x in result:
-    #print(x.id, x.task, x.deadline, x.progress, x.remained, "RECORD")
+    #print(x.id, x.task, x.deadline, x.period, x.remained, "RECORD")
