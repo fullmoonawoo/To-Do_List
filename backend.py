@@ -8,8 +8,3 @@ def refresh_progress(deadline):
     end = datetime.strptime(deadline, "%Y/%m/%d")
     delta = (end - start)
     return delta.days * 24
-
-
-result = refresh_progress("2023/6/21")
-print(result)
-
