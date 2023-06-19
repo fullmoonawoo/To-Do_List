@@ -4,8 +4,6 @@ from time import strftime
 from tkcalendar import DateEntry
 from functools import partial
 
-from datetime import datetime
-
 import db
 import backend as be
 
@@ -95,8 +93,7 @@ class MainWindow:
         self.task_info = self.top_task_entry.get()
         self.deadline = self.top_deadline_entry.get()
         self.period = int(be.refresh_progress(self.deadline))
-        self.remained = self.period
-        db.add_new_task(self.task_info, self.deadline, self.period, self.remained)
+        db.add_new_task(self.task_info, self.deadline, self.period)
         # Refreshing workspace
         self.unpack_tasks()
         self.nt_window.destroy()
@@ -107,14 +104,18 @@ class MainWindow:
         for record in self.db_content:
             self.task_widget = tk.Label(self.columns_frame, width=37, text=record.task, font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.task_widget.grid(row=self.row_move, column=0, padx=1, sticky="WE")
-            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white",
+                                            bg="gray44")
             self.deadline_widget.grid(row=self.row_move, column=1, padx=1, sticky="WE", ipadx=1)
-            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150, maximum=record.period)
+            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150,
+                                                   maximum=record.period)
             self.progress_widget.grid(row=self.row_move, column=2, padx=1, sticky="WE")
-            self.confirmation_widget = tk.Button(self.columns_frame, command=partial(self.confirm_task, record.id), width=10, text="√", font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.confirmation_widget = tk.Button(self.columns_frame, command=partial(self.confirm_task, record.id), width=10, text="√",
+                                                 font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
             self.task_container.append([self.task_widget, self.deadline_widget, self.progress_widget, self.confirmation_widget])
             self.row_move += 1
+            print(record.id, record.task, "PERIOD:", record.period, record.deadline)
 
     def refresh_workspace(self):
         if len(self.task_container) != 0:
@@ -127,8 +128,10 @@ class MainWindow:
         self.unpack_tasks()
 
     def refresh_progress(self):
-        for widget_dump in self.task_container:
-            widget_dump[2]['value'] = 40
+        self.db_content = db.get_tasks()
+        for record, widget_dump in zip(self.db_content, self.task_container):
+            print("CALCULATED PROGRESS ", be.refresh_progress(record.deadline), "RECORD.PERIOD ", record.period)
+            widget_dump[2]['value'] = be.refresh_progress(record.deadline)
 
     def run(self):
         self.unpack_tasks()
