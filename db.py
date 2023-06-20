@@ -62,4 +62,4 @@ def remove_task(id_numb):
 #result = get_tasks()
 
 #for x in result:
-    #print(x.id, x.task, x.deadline, x.period, x.remained, "RECORD")
+    #print(x.id, x.task, x.deadline, x.period, "RECORD")

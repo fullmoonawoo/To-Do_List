@@ -115,7 +115,6 @@ class MainWindow:
             self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
             self.task_container.append([self.task_widget, self.deadline_widget, self.progress_widget, self.confirmation_widget])
             self.row_move += 1
-            print(record.id, record.task, "PERIOD:", record.period, record.deadline)
 
     def refresh_workspace(self):
         if len(self.task_container) != 0:
@@ -131,7 +130,7 @@ class MainWindow:
         self.db_content = db.get_tasks()
         for record, widget_dump in zip(self.db_content, self.task_container):
             print("CALCULATED PROGRESS ", be.refresh_progress(record.deadline), "RECORD.PERIOD ", record.period)
-            widget_dump[2]['value'] = be.refresh_progress(record.deadline)
+            widget_dump[2]['value'] = record.period - be.refresh_progress(record.deadline)
 
     def run(self):
         self.unpack_tasks()
