@@ -12,6 +12,8 @@ class MainWindow:
     def __init__(self):
         # Setting window on the FullHD screen
         self.window = tk.Tk()
+        self.window.config(bg="gray8")
+        self.window.resizable(width=False, height=False)
         self.sc_width = self.window.winfo_screenwidth()
         self.sc_height = self.window.winfo_screenheight()
         self.x = ((self.sc_width / 2) - 220) + (self.sc_width / 4)
@@ -30,7 +32,7 @@ class MainWindow:
         self.add_task.grid(row=0, column=1)
 
         self.columns_frame = tk.Frame(self.window, width=620, height=280, bg="gray8")
-        self.columns_frame.grid(row=1, column=0, sticky="WE")
+        self.columns_frame.grid(row=1, column=0, sticky="WE", rowspan=10)
 
         self.tasks = tk.Label(self.columns_frame, width=33, text="Task", font=("Source Code Pro", 11, "bold"), fg="green2", bg="gray24")
         self.tasks.grid(row=0, column=0, padx=1, sticky="W")
@@ -129,7 +131,6 @@ class MainWindow:
     def refresh_progress(self):
         self.db_content = db.get_tasks()
         for record, widget_dump in zip(self.db_content, self.task_container):
-            print("CALCULATED PROGRESS ", be.refresh_progress(record.deadline), "RECORD.PERIOD ", record.period)
             widget_dump[2]['value'] = record.period - be.refresh_progress(record.deadline)
 
     def run(self):
