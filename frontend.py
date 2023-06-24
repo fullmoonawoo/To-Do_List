@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinter import ttk
 from time import strftime
@@ -131,7 +132,7 @@ class MainWindow:
     def refresh_progress(self):
         self.db_content = db.get_tasks()
         for record, widget_dump in zip(self.db_content, self.task_container):
-            widget_dump[2]['value'] = record.period - be.refresh_progress(record.deadline)
+            widget_dump[2].config(value=record.period - be.refresh_progress(record.deadline))
 
     def run(self):
         self.unpack_tasks()
