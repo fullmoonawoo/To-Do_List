@@ -1,5 +1,5 @@
 import sqlite3
-from sqlalchemy import create_engine, Column, String, Date, Integer
+from sqlalchemy import create_engine, Column, String, Integer
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 #connection = sqlite3.connect("to-do_tasks.db")
@@ -30,7 +30,7 @@ class Tasks(Base):
 
 
 # Create the tables
-Base.metadata.create_all(engine) # if db is created need to be disable
+#Base.metadata.create_all(engine)  # if db is created need to be disable
 
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -59,7 +59,7 @@ def remove_task(id_numb):
         print("No such the record in database !")
 
 
-#result = get_tasks()
+result = get_tasks()
 
-#for x in result:
-    #print(x.id, x.task, x.deadline, x.period, "RECORD")
+for x in result:
+    print(x.id, x.task, x.deadline, x.period, "RECORD")

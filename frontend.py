@@ -99,6 +99,7 @@ class MainWindow:
         db.add_new_task(self.task_info, self.deadline, self.period)
         # Refreshing workspace
         self.unpack_tasks()
+        self.refresh_progress()
         self.nt_window.destroy()
 
     def unpack_tasks(self):
@@ -107,10 +108,9 @@ class MainWindow:
         for record in self.db_content:
             self.task_widget = tk.Label(self.columns_frame, width=37, text=record.task, font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.task_widget.grid(row=self.row_move, column=0, padx=1, sticky="WE")
-            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white",
-                                            bg="gray44")
+            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.deadline_widget.grid(row=self.row_move, column=1, padx=1, sticky="WE", ipadx=1)
-            self.progress_widget = ttk.Progressbar(self.columns_frame, orient="horizontal", mode="determinate", length=150,
+            self.progress_widget = ttk.Progressbar(self.columns_frame,  orient="horizontal", mode="determinate", length=150,
                                                    maximum=record.period)
             self.progress_widget.grid(row=self.row_move, column=2, padx=1, sticky="WE")
             self.confirmation_widget = tk.Button(self.columns_frame, command=partial(self.confirm_task, record.id), width=10, text="√",
@@ -128,11 +128,20 @@ class MainWindow:
     def confirm_task(self, task_id):
         db.remove_task(task_id)
         self.unpack_tasks()
+        self.refresh_progress()
 
     def refresh_progress(self):
         self.db_content = db.get_tasks()
         for record, widget_dump in zip(self.db_content, self.task_container):
-            widget_dump[2].config(value=record.period - be.refresh_progress(record.deadline))
+            if ((record.period - be.refresh_progress(record.deadline)) / record.period) < 0.8:
+                widget_dump[2].config(value=record.period - be.refresh_progress(record.deadline))
+            else:
+                #style = ttk.Style()
+                #style.theme_use('clam')
+                #style.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
+                #widget_dump[2].config(style="red.Horizontal.TProgressbar")
+                widget_dump[2].config(value=record.period - be.refresh_progress(record.deadline))
+        self.window.after(1000 * 60 * 60, self.refresh_progress)
 
     def run(self):
         self.unpack_tasks()
