@@ -57,9 +57,3 @@ def remove_task(id_numb):
         session.close()
     except StopIteration:
         print("No such the record in database !")
-
-
-result = get_tasks()
-
-for x in result:
-    print(x.id, x.task, x.deadline, x.period, "RECORD")
