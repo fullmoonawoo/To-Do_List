@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, IntVar
+from tkinter import ttk, IntVar, messagebox
 from time import strftime
 from tkcalendar import DateEntry
 from functools import partial
@@ -31,8 +31,13 @@ class MainWindow:
                                   bg="gray40")
         self.add_task.grid(row=0, column=1)
 
+        # Frame for column heads and tasks
         self.columns_frame = tk.Frame(self.window, width=620, height=280, bg="gray8")
         self.columns_frame.grid(row=1, column=0, sticky="WE", rowspan=10)
+
+        self.style = ttk.Style()
+        self.style.theme_use('clam')
+        self.style.configure("bar.Horizontal.TProgressbar", background='green2')
 
         self.tasks = tk.Label(self.columns_frame, width=33, text="Task", font=("Source Code Pro", 11, "bold"), fg="green2", bg="gray24")
         self.tasks.grid(row=0, column=0, padx=1, sticky="W")
@@ -70,6 +75,7 @@ class MainWindow:
         self.progress_var = None
         self.progress_widget = None
         self.confirmation_widget = None
+        self.decision = None
 
     def open_new_task(self):
         self.nt_window = tk.Toplevel()
@@ -89,7 +95,8 @@ class MainWindow:
         self.top_task_entry.grid(row=1, column=0, padx=1, sticky="NS")
         self.top_deadline_entry = DateEntry(self.nt_window, date_pattern='yyyy/mm/dd')
         self.top_deadline_entry.grid(row=1, column=1, sticky="WE")
-        self.accept_new_task = tk.Button(self.nt_window, text="ACCEPT", command=self.save_new_task, font=("Source Code Pro", 8), fg="white", bg="gray44")
+        self.accept_new_task = tk.Button(self.nt_window, text="ACCEPT", command=self.save_new_task, font=("Source Code Pro", 8), fg="white",
+                                         bg="gray44")
         self.accept_new_task.grid(row=2, column=0, columnspan=2, sticky="WE", ipadx=20)
 
     def save_new_task(self):
@@ -108,12 +115,14 @@ class MainWindow:
         for record in self.db_content:
             self.task_widget = tk.Label(self.columns_frame, width=37, text=record.task, font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.task_widget.grid(row=self.row_move, column=0, padx=1, sticky="WE")
-            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white", bg="gray44")
+            self.deadline_widget = tk.Label(self.columns_frame, width=14, text=record.deadline, font=("Source Code Pro", 8), fg="white",
+                                            bg="gray44")
             self.deadline_widget.grid(row=self.row_move, column=1, padx=1, sticky="WE", ipadx=1)
             self.progress_var = IntVar(self.columns_frame, value=0)
             self.progress_widget = ttk.Progressbar(self.columns_frame, variable=self.progress_var, orient="horizontal", mode="determinate",
                                                    length=150, maximum=record.period)
             self.progress_widget.grid(row=self.row_move, column=2, padx=1, sticky="WE")
+            self.progress_widget.config(style="bar.Horizontal.TProgressbar")
             self.confirmation_widget = tk.Button(self.columns_frame, command=partial(self.confirm_task, record.id), width=10, text="√",
                                                  font=("Source Code Pro", 8), fg="white", bg="gray44")
             self.confirmation_widget.grid(row=self.row_move, column=3, padx=1, sticky="WE")
@@ -128,16 +137,17 @@ class MainWindow:
                 for widget in widget_dump:
                     try:
                         widget.destroy()
-                        print("try")
                     except AttributeError:
                         del widget
-                        print("except")
         self.task_container = []
 
     def confirm_task(self, task_id):
-        db.remove_task(task_id)
-        self.unpack_tasks()
-        self.refresh_progress()
+        self.decision = tk.messagebox.askyesno(title="Confirmation", message="Is this task already solved ?")
+        if self.decision:
+            db.remove_task(task_id)
+            self.unpack_tasks()
+            self.refresh_progress()
+        self.decision = None
 
     def refresh_progress(self):
         self.db_content = db.get_tasks()
@@ -145,10 +155,9 @@ class MainWindow:
             if ((record.period - be.refresh_progress(record.deadline)) / record.period) < 0.8:
                 widget_dump[2].set(record.period - be.refresh_progress(record.deadline))
             else:
-                #style = ttk.Style()
-                #style.theme_use('clam')
-                #style.configure("red.Horizontal.TProgressbar", foreground='red', background='red')
-                #widget_dump[2].config(style="red.Horizontal.TProgressbar")
+                self.style.theme_use('clam')
+                self.style.configure("red.Horizontal.TProgressbar", background='red2')
+                widget_dump[3].config(style="red.Horizontal.TProgressbar")
                 widget_dump[2].set(record.period - be.refresh_progress(record.deadline))
         self.window.after(1000 * 60 * 60, self.refresh_progress)
 
