@@ -7,5 +7,7 @@ def refresh_progress(deadline):
     start = datetime.strptime(current_date, "%Y/%m/%d %H:%M")
     end = datetime.strptime(deadline, "%Y/%m/%d")
     end += timedelta(hours=12)
-    delta = (end - start)
+    delta_days = (end - start).days
+    delta_hours = (end - start).seconds / 86400
+    delta = delta_days + delta_hours
     return delta

@@ -1,5 +1,5 @@
 import sqlite3
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine, Column, String, Integer, Float
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 #connection = sqlite3.connect("to-do_tasks.db")
@@ -23,7 +23,7 @@ class Tasks(Base):
     id = Column(Integer, primary_key=True)
     task = Column(String)
     deadline = Column(String)
-    period = Column(Integer)
+    period = Column(Float)
 
     def __str__(self):
         return f'ID: {self.id}, TASK: {self.task}, DEADLINE: {self.deadline}, PERIOD: {self.period}'
