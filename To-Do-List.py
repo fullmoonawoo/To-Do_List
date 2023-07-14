@@ -102,7 +102,7 @@ class MainWindow:
     def save_new_task(self):
         self.task_info = self.top_task_entry.get()
         self.deadline = self.top_deadline_entry.get()
-        self.period = int(be.refresh_progress(self.deadline))
+        self.period = float(be.refresh_progress(self.deadline))
         db.add_new_task(self.task_info, self.deadline, self.period)
         # Refreshing workspace
         self.nt_window.destroy()
@@ -152,7 +152,7 @@ class MainWindow:
     def refresh_progress(self):
         self.db_content = db.get_tasks()
         for record, widget_dump in zip(self.db_content, self.task_container):
-            if ((record.period - be.refresh_progress(record.deadline)) / record.period) < 0.8:
+            if (record.period - be.refresh_progress(record.deadline)) / record.period < 0.8:
                 widget_dump[2].set(record.period - be.refresh_progress(record.deadline))
             else:
                 self.style.theme_use('clam')
