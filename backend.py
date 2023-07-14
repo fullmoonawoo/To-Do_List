@@ -11,6 +11,3 @@ def refresh_progress(deadline):
     delta_hours = (end - start).seconds / 86400
     delta = delta_days + delta_hours
     return delta
-
-
-print(refresh_progress("2023/07/15"))
