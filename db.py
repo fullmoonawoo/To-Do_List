@@ -14,8 +14,8 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 #  SQLAlchemy commands use without sqlite syntax
 
 db_path = "tasks.db"
-engine = create_engine(f'sqlite:///{db_path}', echo=True)
-Base = declarative_base()
+engine = create_engine(f'sqlite:///{db_path}', echo=True)  # communication engine between python code and sql database which perform queries, etc.
+Base = declarative_base()  # allow to use sql tables as python classes each class == sql table, each instance == table line
 
 
 class Tasks(Base):
